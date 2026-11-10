@@ -1,6 +1,6 @@
 ---
 name: lanrentingshu
-display_name: 懒人听书
+display_name: 懒人听书助手
 display_name_en: Lanren Tingshu
 description: 懒人听书推荐与榜单 — 按 userId 返回书单，或按关键词搜有声书、按 rankId 查榜单、查用户收听历史、对单本书/节目做 AI 解读。用户说“推荐几本书”“猜你喜欢”“换一批”“看看排行榜”“热播榜”“榜单前10”“这个榜单是什么”“榜单有多少本”“搜一下XX”“有没有XX这本书”“我最近在听什么”“我的收听历史”“解读一下这本书”“这本书讲什么”“适合谁听”“悬疑分类有什么”“推荐几本儿童故事”“相声类推荐”时使用。
 description_zh: 提供懒人听书的个性化推荐、书籍搜索、排行榜、收听历史、AI 解读、分类浏览和听书报告。
@@ -13,7 +13,7 @@ examples_en:
 - "Recommend a few audiobooks"
 - "Search for Jian Lai"
 - "Show the top 10 trending titles"
-version: 0.1.2
+version: 0.1.3
 author: "懒人听书"
 ---
 
