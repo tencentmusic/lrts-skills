@@ -9,15 +9,11 @@ examples_zh:
 - "推荐几本书"
 - "搜一下剑来"
 - "看看热播榜前10"
-- "我最近在听什么"
-- "解读一下这本书"
 examples_en:
 - "Recommend a few audiobooks"
 - "Search for Jian Lai"
 - "Show the top 10 trending titles"
-- "What have I been listening to recently?"
-- "Interpret this book"
-version: 0.1.1
+version: 0.1.2
 author: "懒人听书"
 ---
 
