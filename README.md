@@ -78,7 +78,7 @@ export LRTS_LRAGENT_KEY=lsk_xxx
 
 ## 版本
 
-当前版本：**0.1.0**
+当前版本：**0.1.1**
 
 ## License
 
