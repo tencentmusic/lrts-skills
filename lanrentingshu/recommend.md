@@ -38,3 +38,7 @@ Invoke-RestMethod -Uri "https://shapi.lanrentingshu.com/lrts/cgi/lragent/recomme
 - 需要 key，未授权会返回 401；
 - `items` 为空就如实说「暂无推荐」，不要补造；
 - 用户说「换一批」时再调一次即可，不要自己拼别的书单。
+
+## 没有 key 时
+
+不要调用本接口，也不要发送空的 `Authorization`。如果用户只是说「推荐几本书」，改调 `charts.md` 中的公开热播榜，并明确说明这是公开榜单推荐，不是个性化推荐；如果用户说「猜你喜欢」或「换一批」，说明个性化推荐需要先完成授权。

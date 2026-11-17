@@ -2,18 +2,18 @@
 name: lanrentingshu
 display_name: 懒人听书助手
 display_name_en: Lanren Tingshu
-description: 懒人听书推荐与榜单 — 按 userId 返回书单，或按关键词搜有声书、按 rankId 查榜单、查用户收听历史、对单本书/节目做 AI 解读。用户说“推荐几本书”“猜你喜欢”“换一批”“看看排行榜”“热播榜”“榜单前10”“这个榜单是什么”“榜单有多少本”“搜一下XX”“有没有XX这本书”“我最近在听什么”“我的收听历史”“解读一下这本书”“这本书讲什么”“适合谁听”“悬疑分类有什么”“推荐几本儿童故事”“相声类推荐”时使用。
-description_zh: 提供懒人听书的个性化推荐、书籍搜索、排行榜、收听历史、AI 解读、分类浏览和听书报告。
+description: 懒人听书有声内容助手：无需授权即可搜索书籍、查看公开榜单；完成 skill key 授权后可做个性化推荐、收听历史、分类浏览、AI 解读和听书报告。用户说“推荐几本书”“猜你喜欢”“换一批”“看看排行榜”“热播榜”“榜单前10”“这个榜单是什么”“榜单有多少本”“搜一下XX”“有没有XX这本书”“我最近在听什么”“我的收听历史”“解读一下这本书”“这本书讲什么”“适合谁听”“悬疑分类有什么”“推荐几本儿童故事”“相声类推荐”时使用。
+description_zh: 无需授权即可搜索懒人听书内容和查看公开榜单；授权后支持个性化推荐、收听历史、分类浏览、AI 解读和听书报告。
 description_en: Search and explore Lanren Tingshu audiobooks with recommendations, charts, listening history, AI interpretation, categories, and listening reports.
 examples_zh:
-- "推荐几本书"
 - "搜一下剑来"
 - "看看热播榜前10"
+- "已授权，推荐几本书"
 examples_en:
 - "Recommend a few audiobooks"
 - "Search for Jian Lai"
 - "Show the top 10 trending titles"
-version: 0.1.3
+version: 0.1.4
 author: "懒人听书"
 ---
 
@@ -22,17 +22,26 @@ author: "懒人听书"
 通过 HTTP 接口查询懒人听书的推荐、搜索、榜单、收听历史、AI 解读、分类浏览和听书报告。
 **只读接口，不做写操作；不要编造书单。**
 
+## 运行前置检查
+
+先判断是否存在 `LRTS_LRAGENT_KEY`：环境变量优先，其次只读取约定的本地 key 文件。不要扫描其它凭据，也不要让用户把 key 粘贴到对话中。
+
+- 无需 key：`search`、`rankings`、`rankingsdetail`，可直接调用。
+- 必须有 key：`recommend`、`history`、`discoverChannels`、`interpret`、`listenReport`。
+- 没有 key 时，不要给受保护接口发送空的 `Authorization`，也不要反复重试；按“无授权时的降级规则”处理。
+- 有 key 时才发送 `Authorization: Bearer <key>`。如果接口仍返回 401，提示重新授权，不展示或回显 key。
+
 ## 支持的能力
 
 | 能力 | 说明 | 用户示例 | 详细说明 |
 |---|---|---|---|
-| 推荐 | 按账号生成个性化书单 | "推荐几本书" "猜你喜欢" "换一批" | `recommend.md` |
+| 推荐 | 有 key 时按账号生成个性化书单；无 key 时可降级到公开热播榜 | "推荐几本书" "猜你喜欢" "换一批" | `recommend.md` |
 | 搜索 | 按关键词搜有声书/节目；搜不到时免费优先 | "搜一下剑来" "有没有盗墓笔记这本书" | `search.md` |
 | 榜单 | 按 rankId 查榜单前 N 名 / 榜单详情 | "热播榜前10" "这个榜单是什么" | `charts.md` |
-| 收听历史 | 最近收听的书与节目，按时间倒序 | "我最近在听什么" "我的收听历史" | `history.md` |
-| AI 解读 | 单本书/节目的内容解读 | "解读一下这本书" "适合谁听" | `interpret.md` |
-| 分类浏览 | 按分类拿一批书/节目 | "悬疑分类有什么" "来点相声" | `channels.md` |
-| 听书报告 | 最近收听记录的聚合统计 | "我的听书报告" "我听了多久" | `report.md` |
+| 收听历史 | 需要 key；最近收听的书与节目，按时间倒序 | "我最近在听什么" "我的收听历史" | `history.md` |
+| AI 解读 | 需要 key；对单本书/节目做内容解读 | "解读一下这本书" "适合谁听" | `interpret.md` |
+| 分类浏览 | 需要 key；无 key 时可退化为分类关键词搜索 | "悬疑分类有什么" "来点相声" | `channels.md` |
+| 听书报告 | 需要 key；最近收听记录的聚合统计 | "我的听书报告" "我听了多久" | `report.md` |
 
 调用任何接口前先读取对应说明文件，确认参数和字段，不要凭字段名猜。
 
@@ -52,7 +61,7 @@ GET|POST ${BaseUrl}/lrts/cgi/lragent/<action>
 
 ### 鉴权
 
-- Header：`Authorization: Bearer <LRTS_LRAGENT_KEY>`
+- 对需要 key 的接口发送 Header：`Authorization: Bearer <LRTS_LRAGENT_KEY>`；搜索和榜单接口无需 Header。
 - key 读取顺序：环境变量 `LRTS_LRAGENT_KEY` > 本地文件
   - macOS/Linux：`~/.config/lrts-lragent/key`
   - Windows：`%USERPROFILE%\.config\lrts-lragent\key`
@@ -70,13 +79,21 @@ GET|POST ${BaseUrl}/lrts/cgi/lragent/<action>
 
 - 成功判据：`apiStatus == 0 && status == 0`；
 - `status` 为 401：未授权，提示去授权页；429：请求过于频繁，提示稍后再试；
+- HTTP 非 2xx、响应不是合法 JSON 或服务超时：说明服务暂时不可用，不要编造结果；同一请求只重试一次。
 - `data.items` 为空就如实说没找到，不要用推荐/榜单结果冒充。
+
+## 无授权时的降级规则
+
+1. 用户说“推荐几本书”但没有 key：调用公开的 `/rankings`，默认 `rankId=14680`，按用户要求取前 N 条；明确说明“当前未完成授权，以下是公开热播榜推荐，不是个性化推荐”。
+2. 用户说“猜你喜欢”或“换一批”但没有 key：说明个性化推荐需要授权；如果用户仍想先看内容，可以调用公开热播榜，并明确不是猜你喜欢。换一批时使用榜单的 `start` 偏移，不要重复拼接或编造书单。
+3. 用户只说某个分类/题材但没有 key：调用 `search`，把分类名作为关键词；明确说明这是公开关键词搜索，不是完整分类浏览。搜不到就如实说没找到。
+4. 收听历史、听书报告、AI 解读没有 key：不要调用受保护接口，也不要用公开搜索或榜单冒充用户数据；直接给出授权入口和下一步。
 
 ## 二、能力路由
 
 | 用户意图 | 走哪个能力 |
 |---|---|
-| 要"随便来点"个性化内容 | `recommend.md` |
+| 要"随便来点"个性化内容 | `recommend.md`；无 key 时按降级规则处理 |
 | 有具体书名/关键词 | `search.md` |
 | 问榜单、名次、前 N | `charts.md` |
 | 问自己听过什么 | `history.md` |
@@ -84,7 +101,7 @@ GET|POST ${BaseUrl}/lrts/cgi/lragent/<action>
 | 只说"XX 分类/题材"要一批 | `channels.md` |
 | 问"我听了多久/听书报告" | `report.md` |
 
-判断口诀：**具体东西找不找得到 → 搜索；给我来点 → 推荐；榜/名次 → 榜单；讲什么/适合谁 → 解读；XX 分类要一批 → 分类浏览**。
+判断口诀：**具体东西找不找得到 → 搜索；给我来点 → 推荐；榜/名次 → 榜单；讲什么/适合谁 → 解读；XX 分类要一批 → 分类浏览**。先判断是否有 key，再决定走授权接口还是降级规则。
 
 主播/作者搜索**暂时下线**：用户要搜主播时，直接回「主播搜索暂时下线了，可以先告诉我书名或题材，我按内容帮你找」。
 

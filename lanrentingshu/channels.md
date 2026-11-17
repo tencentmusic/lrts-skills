@@ -40,3 +40,7 @@ Invoke-RestMethod -Uri "https://shapi.lanrentingshu.com/lrts/cgi/lragent/discove
 - `source=search`：`summary` 为空时不要编导语；
 - `items` 为空就说「这个分类下暂时没有找到内容」，不要用别的分类/榜单顶替；
 - 分类名用用户原话，不要自己改成站内不存在的分类。
+
+## 没有 key 时
+
+不要调用本接口。改用 `search.md` 的公开搜索接口，把用户的分类或题材原话作为 `keyword`；回答中明确这是关键词搜索，不是完整分类浏览，不要生成分类导语或声称覆盖全部内容。

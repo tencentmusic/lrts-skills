@@ -36,14 +36,14 @@
 
 ```bash
 curl -sS -G "https://shapi.lanrentingshu.com/lrts/cgi/lragent/rankings" \
-  -H "Authorization: Bearer $LRTS_LRAGENT_KEY" \
   --data-urlencode "rankId=14689" --data-urlencode "size=10"
 ```
 
 ```powershell
-$h = @{ Authorization = "Bearer $env:LRTS_LRAGENT_KEY" }
-Invoke-RestMethod -Uri "https://shapi.lanrentingshu.com/lrts/cgi/lragent/rankings?rankId=14689&size=10" -Headers $h
+Invoke-RestMethod -Uri "https://shapi.lanrentingshu.com/lrts/cgi/lragent/rankings?rankId=14689&size=10"
 ```
+
+榜单列表和榜单详情无需 key。
 
 ## 注意
 

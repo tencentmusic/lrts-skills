@@ -25,14 +25,14 @@
 
 ```bash
 curl -sS -G "https://shapi.lanrentingshu.com/lrts/cgi/lragent/search" \
-  -H "Authorization: Bearer $LRTS_LRAGENT_KEY" \
   --data-urlencode "keyword=白眉大侠" --data-urlencode "pageSize=5"
 ```
 
 ```powershell
-$h = @{ Authorization = "Bearer $env:LRTS_LRAGENT_KEY" }
-Invoke-RestMethod -Uri "https://shapi.lanrentingshu.com/lrts/cgi/lragent/search?keyword=白眉大侠&pageSize=5" -Headers $h
+Invoke-RestMethod -Uri "https://shapi.lanrentingshu.com/lrts/cgi/lragent/search?keyword=白眉大侠&pageSize=5"
 ```
+
+搜索无需 key。
 
 ## 免费优先策略（搜不到时）
 
